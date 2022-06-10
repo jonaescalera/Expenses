@@ -1,115 +1,72 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
+import React from "react";
+import {ThemeProvider} from "@rneui/themed";
+import theme from "./src/styles/app.theme";
+import Home from "./src/components/Body";
+import Header from "./src/components/Header";
+import {SafeAreaView} from "react-native-safe-area-context";
+import {StyleSheet, View} from "react-native";
+import {NavigationContainer} from "@react-navigation/native";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import AddExpense from "./src/components/AddExpense";
 
-import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section: React.FC<{
-  title: string;
-}> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changesss">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerTitleAlign: "center",
+          //headerTitle: "Home",
+          headerTitleStyle: {fontWeight: "bold"},
+          headerStyle: {backgroundColor: "#33BBFF"},
+          headerTintColor: "white",
+        }}>
+        {/* <Stack.Screen name="Header" component={Header} /> */}
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="AddExpense" component={AddExpense} />
+      </Stack.Navigator>
+      {/* <View style={styles.container}>
+      <Header title="Gastos" />
+      {/* <Body title="Test" />  */}
+      {/* <View style={[styles.top]} /> */}
+      {/* <View style={styles.body}> */}
+      {/* <Home title="Test" /> */}
+      {/* </View> */}
+      {/* <View style={styles.bottom} /> */}
+      {/* <View style={[styles.box, {backgroundColor: "yellow"}]} />
+      <View style={[styles.box, {backgroundColor: "red"}]} />
+      <View style={[styles.box, {backgroundColor: "green"}]} />
+      <View style={[styles.box, {backgroundColor: "blue"}]} />
+      <View style={[styles.box, {backgroundColor: "orange"}]} /> */}
+      {/* <View style={[styles.box, {backgroundColor: "mediumslateblue"}]} /> 
+    </View> */}
+    </NavigationContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    //backgroundColor: "black",
+    //flexDirection: "row",
+    //direction: "rtl",
+    //alignItems: "center",
+    //flexDirection: "row-reverse",
+    //justifyContent: "center",
+    //flexWrap: "wrap",
+    //flexDirection: "row",
+    //alignContent: "space-around",
+    //maxHeight: 400,
+    //padding: 20,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  box: {
+    width: 300,
+    height: 100,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+  top: {flex: 2, backgroundColor: "pink"},
+  body: {flex: 6, backgroundColor: "red"},
+  bottom: {flex: 1, backgroundColor: "purple"},
 });
 
 export default App;
