@@ -1,7 +1,7 @@
 import React from "react";
 import {ThemeProvider} from "@rneui/themed";
 import theme from "./src/styles/app.theme";
-import Home from "./src/components/Body";
+import Home from "./src/components/Home";
 import Header from "./src/components/Header";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {StyleSheet, View} from "react-native";

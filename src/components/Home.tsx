@@ -38,9 +38,20 @@ const list = [
   },
 ];
 
-const Body: React.FC<any | null> = ({navigation}) => {
+const Home: React.FC<any | null> = ({navigation, route}) => {
   const {theme} = useTheme();
   const {width, height} = Dimensions.get("screen");
+
+  React.useEffect(() =>{
+    if(route.params?.item){
+      list.push(route.params?.item);
+    }
+  },[route.params?.item]);
+
+  // const addItem = (item:any) => {
+  //   list.push(item);
+  // };
+
   return (
     <ScrollView>
       <View style={styles.contain}>
@@ -83,7 +94,7 @@ const Body: React.FC<any | null> = ({navigation}) => {
             marginHorizontal: 50,
             marginVertical: 10,
           }}
-          onPress={() => navigation.navigate("AddExpense")}
+          onPress={() => navigation.navigate("AddExpense", {})}
         />
       </View>
     </ScrollView>
@@ -101,4 +112,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Body;
+export default Home;
