@@ -1,5 +1,4 @@
 import React from "react";
-import {ThemeProvider} from "@rneui/themed";
 import theme from "./src/styles/app.theme";
 import Home from "./src/components/Home";
 import Header from "./src/components/Header";
@@ -8,39 +7,52 @@ import {StyleSheet, View} from "react-native";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import AddExpense from "./src/components/AddExpense";
+import Icon from "react-native-vector-icons/FontAwesome";
+import {ThemeProvider} from "./src/context/ThemeContext";
+import ThemeButton from "./src/components/ThemeButton";
+//import AppLogo from "../components/commons/ui/AppLogo";
 
 const Stack = createNativeStackNavigator();
 
+// const dataAppContext: AppContextInterface = {
+//   color: "black",
+// };
+
 const App = () => {
+  const darkIcon = <Icon name="rocket" size={30} color="white" />;
+  const whiteIcon = <Icon name="rocket" size={30} color="white" />;
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerTitleAlign: "center",
-          //headerTitle: "Home",
-          headerTitleStyle: {fontWeight: "bold"},
-          headerStyle: {backgroundColor: "#33BBFF"},
-          headerTintColor: "white",
-        }}>
-        {/* <Stack.Screen name="Header" component={Header} /> */}
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="AddExpense" component={AddExpense} />
-      </Stack.Navigator>
-      {/* <View style={styles.container}>
+      <ThemeProvider>
+        <Stack.Navigator
+          screenOptions={{
+            headerTitleAlign: "center",
+            //headerTitle: "Home",
+            headerTitleStyle: {fontWeight: "bold"},
+            headerStyle: {backgroundColor: "#33BBFF"},
+            headerTintColor: "white",
+            headerRight: () => <ThemeButton />,
+          }}>
+          {/* <Stack.Screen name="Header" component={Header} /> */}
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="AddExpense" component={AddExpense} />
+        </Stack.Navigator>
+        {/* <View style={styles.container}>
       <Header title="Gastos" />
       {/* <Body title="Test" />  */}
-      {/* <View style={[styles.top]} /> */}
-      {/* <View style={styles.body}> */}
-      {/* <Home title="Test" /> */}
-      {/* </View> */}
-      {/* <View style={styles.bottom} /> */}
-      {/* <View style={[styles.box, {backgroundColor: "yellow"}]} />
+        {/* <View style={[styles.top]} /> */}
+        {/* <View style={styles.body}> */}
+        {/* <Home title="Test" /> */}
+        {/* </View> */}
+        {/* <View style={styles.bottom} /> */}
+        {/* <View style={[styles.box, {backgroundColor: "yellow"}]} />
       <View style={[styles.box, {backgroundColor: "red"}]} />
       <View style={[styles.box, {backgroundColor: "green"}]} />
       <View style={[styles.box, {backgroundColor: "blue"}]} />
       <View style={[styles.box, {backgroundColor: "orange"}]} /> */}
-      {/* <View style={[styles.box, {backgroundColor: "mediumslateblue"}]} /> 
+        {/* <View style={[styles.box, {backgroundColor: "mediumslateblue"}]} /> 
     </View> */}
+      </ThemeProvider>
     </NavigationContainer>
   );
 };
