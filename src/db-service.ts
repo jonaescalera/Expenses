@@ -1,43 +1,65 @@
 import { openDatabase, SQLiteDatabase, enablePromise } from "react-native-sqlite-storage";
-import Expense from "./models/Expense";
+import {Expense} from "./models/Expense";
 
-const tableName = "expense";
+const tn = "expense";
 
 enablePromise(true);
 
 export const getDBConnection = async () => {
-    return openDatabase({name: "budget-data.db", location: "default"});
+  return openDatabase({name: "budget-data.db", location: "default"});
 };
 
 export const createTable = async (db: SQLiteDatabase) => {
   // create table if not exists
-  const query = `CREATE TABLE IF NOT EXISTS ${tableName}(
-    value TEXT NOT NULL);`;
+
+  // const deleteQuery =  `DROP TABLE IF EXISTS ${tn}`;
+
+  // await db.executeSql(deleteQuery);
+
+  const query = `CREATE TABLE IF NOT EXISTS ${tn}(
+    name TEXT NOT NULL, price int,date TEXT NOT NULL);`;
 
   await db.executeSql(query);  
 };
 
 export const getTodoItems = async (db: SQLiteDatabase): Promise<Expense[]> => {
-    try {
-      const todoItems: Expense[] = [];
-      const results = await db.executeSql(`
-      SELECT rowid as id,name,price,date FROM ${tableName}`);
-      results.forEach(result => {
-        for (let index = 0; index < result.rows.length; index++) {
-          todoItems.push(result.rows.item(index));
-        }
-      });
-      return todoItems;
-    } catch (error) {
-      console.error(error);
-      throw Error("Failed to get todoItems !!!");
-    }
+  try {
+    const todoItems: Expense[] = [];
+    //const rs = await db.executeSql(`SELECT rowid as id, name, price, date FROM ${tn}`);
+    const rs = await db.executeSql(`SELECT rowid as id, name, price, date FROM ${tn}`);
+    
+    console.log(rs);
+    rs.forEach(r => {
+      for (let index = 0; index < r.rows.length; index++) {
+        todoItems.push(r.rows.item(index));
+      }
+    });
+
+    console.log(todoItems);
+    return todoItems;
+  } catch (error) {
+    throw Error("Failed to get items !!!");
+  }
 };
 
 export const saveTodoItems = async (db: SQLiteDatabase, todoItems: Expense[]) => {
-    const insertQuery =
-      `INSERT OR REPLACE INTO ${tableName}(rowid, name, price, date) values` +
-      todoItems.map(i => `('${i.name}', '${i.price}', '${i.date}')`).join(",");
-  
-    return db.executeSql(insertQuery);
+  const insertQuery =
+    `INSERT OR REPLACE INTO ${tn}(rowid, name, price, date) values` +
+    todoItems.map(i =>  `('${i.id}', '${i.name}', ${i.price}, '${i.date}')`).join(",");
+
+  return db.executeSql(insertQuery);
 };
+
+export const updateTodoItems = async (db: SQLiteDatabase, item: Expense) => {
+  const updateQuery = (
+    "UPDATE expense SET name =name, price =price, date =date where rowid =6 ");
+    //["name", "price", "date", 100]);
+
+  return db.executeSql(updateQuery);
+};
+
+export const deleteTodoItem = async (db: SQLiteDatabase, id: number) => {
+  const deleteQuery = `DELETE from ${tn} where rowid = ${id}`;
+  await db.executeSql(deleteQuery);
+};
+
