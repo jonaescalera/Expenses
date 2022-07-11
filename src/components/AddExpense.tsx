@@ -2,13 +2,10 @@ import {Button, Text} from "@rneui/base";
 import {Input} from "@rneui/themed";
 import React, {useContext, useEffect, useState} from "react";
 import {StyleSheet, View} from "react-native";
-import {useNavigation, RouteProp} from "@react-navigation/native";
-import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-import {SafeAreaView} from "react-native-safe-area-context";
 import {useForm, Controller} from "react-hook-form";
 import {ThemeContext} from "../context/ThemeContext";
-import {getDBConnection, saveTodoItems} from "../db-service";
 import {convertDate} from "../utils/dateHelper";
+import {addItem} from "../actions";
 
 type FormData = {
   name: string;
@@ -23,6 +20,8 @@ interface Props {
 
 const AddExpense = ({navigation, route}) => {
   //const navigation = useNavigation<NavigationProps>();
+  const {state, dispatch} = useContext(ThemeContext);
+  const {items} = state;
   const {item} = route.params;
   const {
     control,
@@ -31,8 +30,6 @@ const AddExpense = ({navigation, route}) => {
   } = useForm<FormData>();
 
   const [newExpense, setNewExpense] = useState("");
-  const {theme, items, handleItems} = useContext(ThemeContext);
-
   const onSubmit = (data: FormData) => {
     const dateItem = new Date();
     const obj: FormData = {
@@ -46,23 +43,24 @@ const AddExpense = ({navigation, route}) => {
 
   const addExpense = async (newExpense: FormData) => {
     try {
-      const newTodos = [
-        ...items,
-        {
-          id: items.length
-            ? items.reduce((acc, cur) => {
-                if (cur.id > acc.id) return cur;
-                return acc;
-              }).id + 1
-            : 1,
-          name: newExpense.name,
-          date: newExpense.date,
-          price: parseInt(newExpense.price),
-        },
-      ];
-      handleItems?.(newTodos);
-      const db = await getDBConnection();
-      await saveTodoItems(db, newTodos);
+      const newTodos = {
+        id: items.length
+          ? items.reduce((acc, cur) => {
+              if (cur.id > acc.id) return cur;
+              return acc;
+            }).id + 1
+          : 1,
+        name: newExpense.name,
+        date: newExpense.date,
+        price: parseInt(newExpense.price),
+      };
+
+      addItem(newTodos)
+        .then(res => {
+          dispatch({type: "ADD_ITEM", payload: newTodos});
+        })
+        .catch(err => dispatch({type: "FETCH_ERROR", payload: err?.message}));
+
       setNewExpense("");
       navigation.goBack();
     } catch (error) {

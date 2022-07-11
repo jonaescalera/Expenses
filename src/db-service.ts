@@ -42,10 +42,13 @@ export const getTodoItems = async (db: SQLiteDatabase): Promise<Expense[]> => {
   }
 };
 
-export const saveTodoItems = async (db: SQLiteDatabase, todoItems: Expense[]) => {
-  const insertQuery =
+export const saveTodoItems = async (db: SQLiteDatabase, item: Expense) => {
+  const insertQuery = `INSERT OR REPLACE INTO ${tn}(rowid, name, price, date) values` +
+                      `('${item.id}', '${item.name}', ${item.price}, '${item.date}')`;
+  /*
     `INSERT OR REPLACE INTO ${tn}(rowid, name, price, date) values` +
     todoItems.map(i =>  `('${i.id}', '${i.name}', ${i.price}, '${i.date}')`).join(",");
+    */
 
   return db.executeSql(insertQuery);
 };

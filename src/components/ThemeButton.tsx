@@ -3,7 +3,10 @@ import React, {useContext} from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const ThemeButton: React.FC = () => {
-  const {theme, handleTheme} = useContext(ThemeContext);
+  const {state, dispatch} = useContext(ThemeContext);
+  const {theme} = state;
+
+  const handleTheme = () => dispatch({type: "SET_THEME"});
 
   return (
     <Icon
