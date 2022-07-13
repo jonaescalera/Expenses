@@ -1,15 +1,5 @@
 /* eslint-disable max-len */
-import React, {
-  FC,
-  Dispatch,
-  createContext,
-  useReducer,
-  useEffect,
-  useCallback,
-  useContext,
-} from "react";
-import {getTodoItems, getDBConnection, createTable} from "../db-service";
-import {asyncer} from "../middleware";
+import React, {FC, Dispatch, createContext} from "react";
 import {Expense} from "../models/Expense";
 
 export interface AppContextInterface {
@@ -54,26 +44,6 @@ const list: Array<Expense> = [
   // },
 ];
 
-// interface AppState {
-//   items: Expense[];
-// }
-
-// const initialState: AppState = {
-//   //theme: true,
-//   items: [{
-//     id: 1,
-//     name: "Cristo Obrero cuota",
-//     date: "01/06/2022",
-//     price: 234,
-//   }]
-// };
-
-// const defaultTheme = {
-//   theme: true,
-//   items: list,
-//   getTotalMonth: () => 0,
-// };
-
 export interface AppState {
   // count:number;
   items: Expense[];
@@ -84,7 +54,6 @@ export interface AppState {
 }
 
 const initialState: AppState = {
-  //count: 0,
   items: [],
   theme: true,
   loading: false,
@@ -124,10 +93,6 @@ function reducer(state: typeof initialState, action: ACTIONTYPE): AppState {
       return {
         ...state,
         items: state.items.filter(x => x.id !== action.payload),
-        totalItems: state.items.reduce(
-          (sum, curr) => sum + (curr.price || 0),
-          0,
-        ),
       };
     case "ADD_ITEM":
       return {
@@ -160,33 +125,8 @@ const ThemeContext = createContext<{
   dispatch: () => null,
 });
 
-// export const useContextGlobal = () => useContext(ThemeContext);
-
 const ThemeProvider: FC<React.ReactNode> = ({children}) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-
-  // const [theme, setTheme] = useState(defaultTheme.theme);
-  // const [items, setItems] = useState(defaultTheme.items);
-
-  //const dispatch = useCallback(asyncer(dispatchBase, state), []);
-
-  // const handleTheme = () => {
-  //   setTheme(!theme);
-  // };
-
-  // const handleItems = (values: Expense[]) => {
-  //   setItems(values);
-  // };
-
-  // const getItems = () => {
-  //   return items.sort((a, b) => b.id - a.id);
-  // };
-
-  // const getTotalMonth = () => {
-  //   //let final = 0;
-  //   return items && items.reduce((sum, curr) => sum + (curr.price || 0), 0);
-  //   //return final;
-  // };
 
   return (
     <ThemeContext.Provider value={{state, dispatch}}>
@@ -196,4 +136,3 @@ const ThemeProvider: FC<React.ReactNode> = ({children}) => {
 };
 
 export {ThemeContext, ThemeProvider};
-//export default ThemeProvider;

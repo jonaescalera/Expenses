@@ -3,18 +3,16 @@ import {ListItem, Card} from "@rneui/themed";
 import {Button, Text} from "@rneui/base";
 import {ScrollView, StyleSheet, View, Dimensions} from "react-native";
 import {ThemeContext} from "./../context/ThemeContext";
-import {Expense} from "../models/Expense";
 import {useIsFocused} from "@react-navigation/native";
 import {convertValueToMask} from "../utils/maskHelper";
 import {fetchItems, deleteExpense} from "../actions";
+import type {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {RootStackParamList} from "../../App";
 
-interface CurrentProps {
-  title: string;
-}
+type PropsNavigation = NativeStackScreenProps<RootStackParamList, "AddExpense">;
 
-const Home = ({navigation, route}) => {
-  //const {theme} = useTheme();
-  const {width, height} = Dimensions.get("screen");
+const Home = ({navigation, route}: PropsNavigation) => {
+  const {width} = Dimensions.get("screen");
   const {state, dispatch} = useContext(ThemeContext);
   const {theme} = state;
   const isFocused = useIsFocused();
@@ -58,9 +56,9 @@ const Home = ({navigation, route}) => {
     },
   });
 
-  const editExpense = (item: Expense) => {
-    navigation.navigate("AddExpense", {item});
-  };
+  // const editExpense = () => {
+  // navigation.navigate("AddExpense");
+  // };
 
   const deleteItem = async (id: number) => {
     deleteExpense(id)
@@ -82,7 +80,7 @@ const Home = ({navigation, route}) => {
             backgroundColor: theme ? "white" : "#2c2c2c",
           }}>
           <Card.Title style={styles.titleCard}>
-            $ {convertValueToMask(state.totalItems)}
+            $ {convertValueToMask(state.totalItems.toFixed(2))}
           </Card.Title>
         </Card>
         <ScrollView style={{maxHeight: 290}}>
@@ -95,7 +93,7 @@ const Home = ({navigation, route}) => {
                 leftContent={() => (
                   <Button
                     title="edit"
-                    onPress={() => editExpense(item)}
+                    //onPress={() => editExpense(item)}
                     icon={{name: "edit", color: "white"}}
                     buttonStyle={{minHeight: "100%", backgroundColor: "blue"}}
                   />
@@ -112,16 +110,16 @@ const Home = ({navigation, route}) => {
                   <ListItem.Title style={styles.colorTheme}>
                     {item.name}
                   </ListItem.Title>
-                  <ListItem.Subtitle style={styles.colorTheme} right>
+                  <ListItem.Subtitle style={styles.colorTheme}>
                     {item.date}
                   </ListItem.Subtitle>
                 </ListItem.Content>
                 <ListItem.Content right>
                   <ListItem.Title style={styles.colorTheme}>
-                    $ {item.price}
+                    $ {convertValueToMask(item.price?.toFixed(2))}
                   </ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron style={{marginRight: 15}} />
+                <ListItem.Chevron />
               </ListItem.Swipeable>
             ))
           ) : (

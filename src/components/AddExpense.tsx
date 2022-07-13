@@ -1,11 +1,13 @@
 import {Button, Text} from "@rneui/base";
 import {Input} from "@rneui/themed";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {useForm, Controller} from "react-hook-form";
 import {ThemeContext} from "../context/ThemeContext";
 import {convertDate} from "../utils/dateHelper";
 import {addItem} from "../actions";
+import type {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {RootStackParamList} from "../../App";
 
 type FormData = {
   name: string;
@@ -13,16 +15,13 @@ type FormData = {
   date: string;
 };
 
-interface Props {
-  navigation: any;
-  route: any;
-}
+type PropsNavigation = NativeStackScreenProps<RootStackParamList, "Home">;
 
-const AddExpense = ({navigation, route}) => {
+const AddExpense = ({navigation, route}: PropsNavigation) => {
   //const navigation = useNavigation<NavigationProps>();
   const {state, dispatch} = useContext(ThemeContext);
   const {items} = state;
-  const {item} = route.params;
+  //const {item} = route.params;
   const {
     control,
     handleSubmit,
@@ -52,11 +51,12 @@ const AddExpense = ({navigation, route}) => {
           : 1,
         name: newExpense.name,
         date: newExpense.date,
-        price: parseInt(newExpense.price),
+        //price: Math.round(parseFloat(newExpense.price) * 1e2) / 1e2,
+        price: parseFloat(newExpense.price),
       };
 
       addItem(newTodos)
-        .then(res => {
+        .then(() => {
           dispatch({type: "ADD_ITEM", payload: newTodos});
         })
         .catch(err => dispatch({type: "FETCH_ERROR", payload: err?.message}));
@@ -75,7 +75,7 @@ const AddExpense = ({navigation, route}) => {
         rules={{
           required: true,
         }}
-        defaultValue={item?.name}
+        //defaultValue={item?.name}
         render={({field: {onChange, onBlur, value}}) => (
           <Input
             placeholder="Add expense"
@@ -94,7 +94,7 @@ const AddExpense = ({navigation, route}) => {
         rules={{
           required: true,
         }}
-        defaultValue={item?.price}
+        //defaultValue={item?.price}
         render={({field: {onChange, onBlur, value}}) => (
           <Input
             placeholder="Add price"

@@ -5,18 +5,27 @@ import Header from "./src/components/Header";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {StyleSheet, View} from "react-native";
 import {NavigationContainer} from "@react-navigation/native";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
+
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
+
 import AddExpense from "./src/components/AddExpense";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {ThemeProvider} from "./src/context/ThemeContext";
 import ThemeButton from "./src/components/ThemeButton";
+
 //import AppLogo from "../components/commons/ui/AppLogo";
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Home: undefined;
+  AddExpense: undefined;
+};
 
-// const dataAppContext: AppContextInterface = {
-//   color: "black",
-// };
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+type Props = NativeStackScreenProps<RootStackParamList>;
 
 const App = () => {
   const darkIcon = <Icon name="rocket" size={30} color="white" />;
@@ -25,6 +34,7 @@ const App = () => {
     <NavigationContainer>
       <ThemeProvider>
         <Stack.Navigator
+          initialRouteName="Home"
           screenOptions={{
             headerTitleAlign: "center",
             //headerTitle: "Home",
